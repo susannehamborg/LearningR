@@ -1,4 +1,4 @@
-# Susanne Larsen
+# Susanne
 
 # Loading packages --------------------------------------------------------
 
