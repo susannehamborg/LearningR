@@ -178,3 +178,42 @@ nhanes_small %>%
     old = if_else(age >= 30, "Yes", "No")
   ) %>%
   select(age, old)
+
+
+
+# Exercise ----------------------------------------------------------------
+
+# 1. BMI between 20 and 40 with diabetes   # 616
+nhanes_small %>%
+    # Format should follow: variable >= number or character
+    filter(bmi >= 20 & bmi <= 40 & diabetes == "Yes")
+
+# Pipe the data into mutate function and:
+nhanes_modified <- nhanes_small %>% # Specifying dataset
+    mutate(
+        # 2. Calculate mean arterial pressure
+        mean_arterial_pressure = ((2*bp_dia_ave) + bp_sys_ave) / 3,
+        # 3. Create young_child variable using a condition
+        young_child = if_else(age < 6, "Yes", "No")
+    )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
