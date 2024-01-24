@@ -4,6 +4,9 @@ author: "Susanne Larsen"
 format: html
 ---
 
+-   Susanne Hamborg Larsen
+-   Aarhus University and Aarhus University Hospital
+
 ```{r setup}
 #| message: false
 #| warning: false
@@ -13,7 +16,6 @@ library(NHANES)
 nhanes_small <- read_csv(here::here("data/nhanes_small.csv"))
 ```
 
-
 ```{r}
 nhanes_small <- nhanes_small %>%
   select(age, sex, bmi, diabetes, phys_active, bp_sys_ave, bp_dia_ave, education)
@@ -21,13 +23,11 @@ nhanes_small <- nhanes_small %>%
 nhanes_small
 ```
 
-
-
 ```{r}
 2 + 2
 ```
 
-# Table of results 
+# Table of results
 
 ```{r}
 #| message: false
@@ -43,3 +43,55 @@ nhanes_small %>%
   ungroup() %>%
   knitr::kable(caption = "Mean values of age and BMI for each education and diabetes status")
 ```
+
+# Prettier table
+
+```{r}
+#|echo: false
+#|warning: false
+#|message: false
+
+nhanes_small %>%
+  filter(!is.na(diabetes), !is.na(education)) %>%
+  group_by(diabetes, education) %>%
+  summarise(
+    mean_age = mean(age, na.rm = TRUE),
+    mean_bmi = mean(bmi, na.rm = TRUE)
+  ) %>%
+  ungroup() %>%
+  mutate(
+    # Task 2a.
+    mean_age = round(mean_age, digits = 1),
+    mean_bmi = round(mean_bmi, digits = 1),
+    # Task 2b.
+    education = str_to_sentence(education)
+  ) %>%
+  rename(
+    # Task 3.
+    "Diabetes status" = diabetes,
+    "Education" = education,
+    "Mean Age" = mean_age,
+    "Mean BMI" = mean_bmi
+  ) %>%
+  knitr::kable(caption = "Mean values of Age and BMI for each education and diabetes status.")
+```
+
+# Intro
+
+**This** is the *introduction*
+
+# Methods and Results
+
+**Here are** the methods and *results*
+
+## Analysis
+
+Here is **the** statistical *analysis*
+
+```{r}
+2+2
+```
+
+# Discussion
+
+And finally, this is **the** *discussion*
