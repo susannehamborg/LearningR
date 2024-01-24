@@ -7,6 +7,8 @@
 
 library(tidyverse)
 library(NHANES)
+library(magrittr)
+
 
 
 # Overview of dataset -----------------------------------------------------
@@ -208,15 +210,37 @@ nhanes_small %>%
 nhanes_small %>%
     summarise(max_bmi = max(bmi, na.rm = TRUE))  # should be within the max function
 
-nhanes_small %>%
+result <- nhanes_small %>%
     summarise(max_bmi = max(bmi, na.rm = TRUE),
               min_bmi = min(bmi, na.rm = TRUE))
 
 
 
+# Summary statistics by group -------------------------------------------------------
+
+nhanes_small %>%
+    group_by(diabetes) %>%
+    summarise(mean_age = mean(age, na.rm = TRUE),
+              mean_bmi = mean(bmi, na.rm = TRUE))
+
+nhanes_small %>%
+    filter(!is.na(diabetes)) %>%             # filter to select only rows, where diabtes is NOT NA
+    group_by(diabetes) %>%
+    summarise(mean_age = mean(age, na.rm = TRUE),
+              mean_bmi = mean(bmi, na.rm = TRUE))
+
+nhanes_small %>%
+    filter(!is.na(diabetes), !is.na(phys_active)) %>%      # filter to select only rows, where diabtes is NOT NA
+    group_by(diabetes, phys_active) %>%     # make groups with different combinations of diabetes and phys.activity
+    summarise(mean_age = mean(age, na.rm = TRUE),
+              mean_bmi = mean(bmi, na.rm = TRUE)) %>%
+    ungroup()                               # always ungroup in the end, to not mess other things up ;)
 
 
 
+# Saving dataset as a file ------------------------------------------------
+
+readr::write_csv(nhanes_small, here::here("data/nhanes_small.csv"))
 
 
 
