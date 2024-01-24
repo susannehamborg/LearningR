@@ -2,6 +2,8 @@ Susanne Larsen - Diabetes
 
 A random sentence.
 
+Another random sentence 
+
 TODO: Add more to the title of your project here
 
 # LearningR:
