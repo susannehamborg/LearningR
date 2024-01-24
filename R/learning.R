@@ -183,7 +183,7 @@ nhanes_small %>%
 
 # Exercise ----------------------------------------------------------------
 
-# 1. BMI between 20 and 40 with diabetes   # 616
+# 1. BMI between 20 and 40 with diabetes   # 616 observations
 nhanes_small %>%
     # Format should follow: variable >= number or character
     filter(bmi >= 20 & bmi <= 40 & diabetes == "Yes")
@@ -196,6 +196,21 @@ nhanes_modified <- nhanes_small %>% # Specifying dataset
         # 3. Create young_child variable using a condition
         young_child = if_else(age < 6, "Yes", "No")
     )
+
+
+
+# Calculating summary statistics ----------------------------------------------------
+
+nhanes_small %>%
+    summarise(max_bmi = max(bmi))
+#(if there are NA values, R cannot calculate max, mean etc. Need to exclude NA's from analysis)
+
+nhanes_small %>%
+    summarise(max_bmi = max(bmi, na.rm = TRUE))  # should be within the max function
+
+nhanes_small %>%
+    summarise(max_bmi = max(bmi, na.rm = TRUE),
+              min_bmi = min(bmi, na.rm = TRUE))
 
 
 
