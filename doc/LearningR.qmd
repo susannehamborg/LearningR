@@ -13,6 +13,7 @@ format: html
 
 library(tidyverse)
 library(NHANES)
+library(ggplot2)
 nhanes_small <- read_csv(here::here("data/nhanes_small.csv"))
 ```
 
@@ -21,10 +22,6 @@ nhanes_small <- nhanes_small %>%
   select(age, sex, bmi, diabetes, phys_active, bp_sys_ave, bp_dia_ave, education)
 
 nhanes_small
-```
-
-```{r}
-2 + 2
 ```
 
 # Table of results
@@ -89,9 +86,85 @@ nhanes_small %>%
 Here is **the** statistical *analysis*
 
 ```{r}
-2+2
+2 + 2
 ```
 
 # Discussion
 
 And finally, this is **the** *discussion*
+
+# Picture exercise
+
+Cute dogs in @fig-dogs
+
+![Cute puppies](images/cute_dog.png){#fig-dogs width="50%" height="50%"}
+
+
+# Graphs
+Take an initial look at all your variables, to see the distribution.
+Do one chunk for each graphs.
+
+## Plot one continous variable (histogram, or density plot)
+```{r}
+#| fig-cap: "Distribution of BMI"
+#| label: fig-bmi-histo    # for at kunne referere til denne et andet sted i dokumentet. Nummer skifter ift hele dokumentet
+#| message: FALSE
+
+nhanes_small %>%
+  filter(bmi <= 60) %>%
+  ggplot(aes(x = bmi)) +
+  geom_histogram(na.rm = TRUE)
+```
+
+
+## Plot a discrete variable (has a natural order, whereas a categorical variable has no order (e.g. Region))
+Use a barchart (do not use barplot for continous variables (e.g. with means))
+
+```{r}
+#| label: fig-diabetes-education
+#| fig-cap: "Count of diabetes and education"
+#| fig-subcap:      # use this because we have two figures, which each needs a
+#| - "Number of those with different education"
+#| - "Number of those with or without diabetes"
+#| layout-ncol: 2
+# make the two graphs next to each other instead of stacked above eachother (should choose nrow then)
+
+nhanes_small %>%
+  filter(!is.na(education)) %>%
+  ggplot(aes(x = education)) +
+  geom_bar()
+
+nhanes_small %>%
+  filter(!is.na(diabetes)) %>%
+  ggplot(aes(x = diabetes)) + # cannot add na.rm = F with a discrete variable, so filter NA's out instead
+  geom_bar()
+```
+
+
+## Plot two continous variables:
+
+### geom_hex  (can replace geom_point, when you have very large datasets - you can more easily see where there a many observations (becomes darker))
+```{r}
+nhanes_small %>%
+  ggplot(aes(x = bmi, y = bp_sys_ave)) +
+  geom_hex(na.rm = TRUE) +
+  geom_smooth(na.rm = TRUE) # adds a regression line
+```
+
+### Plotting two discrete variables
+
+```{r}
+nhanes_small %>%
+  filter(!is.na(education), !is.na(diabetes)) %>%
+  ggplot(aes(x = diabetes, fill = education)) +
+  geom_bar(position = position_dodge()) # next to eachother instead of on top of eachother
+```
+
+### Plotting discrete and continous variables 
+
+```{r}
+nhanes_small %>%
+  filter(!is.na(diabetes), bmi <= 60) %>% # need to remove NA's like this for the discrete variable
+  ggplot(aes(x = diabetes, y = bmi)) +
+  geom_violin(na.rm = TRUE) # removes the NA's for the continous variables
+```
